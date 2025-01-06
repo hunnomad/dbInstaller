@@ -1,8 +1,8 @@
 <?php
-# Fejlesztői cucc, hibajelentés be/ki ----------------------------------------------------
+# Developer settings, error report on/off ------------------------------------------------
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
-# Fejlesztői cucc, hibajelentés be/ki ----------------------------------------------------
+# Developer settings, error report on/off ------------------------------------------------
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $host = $_POST['host'] ?? 'localhost';
@@ -13,13 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Ellenőrzés: PDO kiterjesztés
     if (!extension_loaded('pdo') || !extension_loaded('pdo_mysql')) {
-        die('PDO vagy PDO_MYSQL kiterjesztés nincs engedélyezve.');
+        die('PDO or PDO_MYSQL extension is not enabled.');
     }
 
     // Ellenőrzés: init.sql fájl létezik-e
     $sqlFile = __DIR__ . '/init.sql';
     if (!file_exists($sqlFile)) {
-        die('Hiba: Az init.sql fájl nem található.');
+        die('Error: The init.sql file cannot be found.');
     }
 
     try {
@@ -38,11 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sqlCommands = file_get_contents($sqlFile);
         $pdo->exec($sqlCommands);
 
-        echo "<p>Sikeresen létrehoztuk az adatbázist, a táblákat és az alapadatokat!</p>";
+        echo "<p>We have successfully created the database, tables, and master data!</p>";
     } catch (PDOException $e) {
-        die("Hiba az adatbázis kapcsolat során: " . htmlspecialchars($e->getMessage()));
+        die("Error during database connection: " . htmlspecialchars($e->getMessage()));
     } catch (Exception $e) {
-        die("Hiba: " . htmlspecialchars($e->getMessage()));
+        die("Error: " . htmlspecialchars($e->getMessage()));
     }
 } else {
     // Form megjelenítése
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="card-body">
                         <form method="post">
                             <div class="mb-3">
-                                <label for="host" class="form-label">Hostnév</label>
+                                <label for="host" class="form-label">Hostname</label>
                                 <input type="text" name="host" id="host" class="form-control" value="localhost" required>
                             </div>
                             <div class="mb-3">
@@ -74,19 +74,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="number" name="port" id="port" class="form-control" value="3306" required>
                             </div>
                             <div class="mb-3">
-                                <label for="username" class="form-label">Felhasználónév</label>
+                                <label for="username" class="form-label">Username</label>
                                 <input type="text" name="username" id="username" class="form-control" value="root" required>
                             </div>
                             <div class="mb-3">
-                                <label for="password" class="form-label">Jelszó</label>
+                                <label for="password" class="form-label">Password</label>
                                 <input type="password" name="password" id="password" class="form-control">
                             </div>
                             <div class="mb-3">
-                                <label for="dbname" class="form-label">Adatbázis neve</label>
+                                <label for="dbname" class="form-label">Database name</label>
                                 <input type="text" name="dbname" id="dbname" class="form-control" required>
                             </div>
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Telepítés</button>
+                                <button type="submit" class="btn btn-primary">Install</button>
                             </div>
                         </form>
                     </div>
