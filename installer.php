@@ -11,30 +11,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $dbname = $_POST['dbname'] ?? '';
 
-    // Ellenőrzés: PDO kiterjesztés
+    // Check: PDO extension
     if (!extension_loaded('pdo') || !extension_loaded('pdo_mysql')) {
         die('PDO or PDO_MYSQL extension is not enabled.');
     }
 
-    // Ellenőrzés: init.sql fájl létezik-e
+    // Check if init.sql file exists
     $sqlFile = __DIR__ . '/init.sql';
     if (!file_exists($sqlFile)) {
         die('Error: The init.sql file cannot be found.');
     }
 
     try {
-        // Kapcsolódás az adatbázishoz
+        // Connecting to the database
         $dsn = "mysql:host=$host;port=$port;charset=utf8mb4";
         $pdo = new PDO($dsn, $username, $password, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ]);
 
-        // Adatbázis létrehozása, ha nem létezik
+        // Create database if it doesn't exist
         $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbname`");
         $pdo->exec("USE `$dbname`");
 
-        // SQL utasítások végrehajtása
+        // Execute SQL statements
         $sqlCommands = file_get_contents($sqlFile);
         $pdo->exec($sqlCommands);
 
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Error: " . htmlspecialchars($e->getMessage()));
     }
 } else {
-    // Form megjelenítése
+    // Display the form
     ?>
     <!DOCTYPE html>
     <html lang="en">
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header text-center">
-                        <h3>Adatbázis Telepítő</h3>
+                        <h3>Database Installer</h3>
                     </div>
                     <div class="card-body">
                         <form method="post">
